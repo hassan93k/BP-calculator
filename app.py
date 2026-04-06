@@ -6,6 +6,7 @@ import re
 import anthropic
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
+from anthropic import AuthenticationError, APIConnectionError, APIStatusError
 
 load_dotenv()
 
@@ -121,7 +122,16 @@ def analyse():
 
     image_data = base64.standard_b64encode(image_bytes).decode("utf-8")
 
-    result = extract_readings_from_image(image_data, content_type)
+    try:
+        result = extract_readings_from_image(image_data, content_type)
+    except AuthenticationError:
+        return jsonify({"error": "Invalid API key. Please set ANTHROPIC_API_KEY in your .env file."}), 500
+    except APIConnectionError:
+        return jsonify({"error": "Could not reach the Anthropic API. Check your internet connection."}), 500
+    except APIStatusError as e:
+        return jsonify({"error": f"Anthropic API error: {e.message}"}), 500
+    except json.JSONDecodeError:
+        return jsonify({"error": "Could not parse readings from the image. Please try a clearer photo."}), 500
 
     readings = result.get("readings", [])
     averages = calculate_averages(readings)

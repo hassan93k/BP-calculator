@@ -4,10 +4,9 @@ import logging
 import os
 import re
 
-import anthropic
+import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
-from anthropic import AuthenticationError, APIConnectionError, APIStatusError
 
 load_dotenv()
 
@@ -17,55 +16,61 @@ app = Flask(__name__)
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    "gemini-1.5-flash:generateContent"
+)
 
-EXTRACT_PROMPT = """You are a medical data extraction assistant. Look at this image of handwritten or printed blood pressure readings.
+EXTRACT_PROMPT = """Look at this image of blood pressure readings (handwritten or printed).
 
-Extract every blood pressure reading you can find. Each reading has a systolic (top number) and diastolic (bottom number), written as systolic/diastolic (e.g. 120/80).
+Extract every blood pressure reading you can find. Each reading is two numbers separated by a slash — systolic on top, diastolic on bottom (e.g. 120/80).
 
-Return ONLY a JSON object in this exact format, with no other text:
+Return ONLY a JSON object in this exact format, no other text:
 {
   "readings": [
     {"systolic": 120, "diastolic": 80},
     {"systolic": 135, "diastolic": 85}
-  ],
-  "notes": "any relevant notes about the readings or image quality"
+  ]
 }
 
-If you cannot find any blood pressure readings, return:
-{"readings": [], "notes": "No blood pressure readings found"}
+If no blood pressure readings are found, return:
+{"readings": []}
 
-Important: Only include readings where you are confident both numbers are blood pressure values."""
+Only include readings where you are confident both numbers are blood pressure values."""
 
 
-def extract_readings_from_image(image_data: str, media_type: str) -> dict:
-    response = client.messages.create(
-        model="claude-opus-4-6",
-        max_tokens=1024,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": media_type,
-                            "data": image_data,
-                        },
-                    },
-                    {"type": "text", "text": EXTRACT_PROMPT},
-                ],
-            }
-        ],
+def extract_readings_from_image(image_bytes: bytes, mime_type: str) -> dict:
+    image_b64 = base64.standard_b64encode(image_bytes).decode("utf-8")
+
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": EXTRACT_PROMPT},
+                {"inline_data": {"mime_type": mime_type, "data": image_b64}},
+            ]
+        }]
+    }
+
+    resp = requests.post(
+        GEMINI_URL,
+        params={"key": GEMINI_API_KEY},
+        json=payload,
+        timeout=30,
     )
 
-    text = next((b.text for b in response.content if b.type == "text"), "")
+    if resp.status_code == 400:
+        raise ValueError("bad_image")
+    if resp.status_code == 403:
+        raise PermissionError("bad_key")
+    if resp.status_code == 429:
+        raise RuntimeError("rate_limit")
+    resp.raise_for_status()
 
+    text = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
     # Strip markdown code fences if present
-    text = re.sub(r"^```(?:json)?\s*", "", text.strip())
+    text = re.sub(r"^```(?:json)?\s*", "", text)
     text = re.sub(r"\s*```$", "", text.strip())
-
     return json.loads(text)
 
 
@@ -114,29 +119,27 @@ def analyse():
     if file.filename == "":
         return jsonify({"error": "No image selected"}), 400
 
-    # Validate media type
-    content_type = file.content_type or "image/jpeg"
+    mime_type = file.content_type or "image/jpeg"
     allowed = {"image/jpeg", "image/png", "image/gif", "image/webp"}
-    if content_type not in allowed:
-        # Default to jpeg for unknown types
-        content_type = "image/jpeg"
+    if mime_type not in allowed:
+        mime_type = "image/jpeg"
 
     image_bytes = file.read()
-    if len(image_bytes) > 20 * 1024 * 1024:  # 20 MB limit
+    if len(image_bytes) > 20 * 1024 * 1024:
         return jsonify({"error": "Image too large (max 20 MB)"}), 400
 
-    image_data = base64.standard_b64encode(image_bytes).decode("utf-8")
-
     try:
-        result = extract_readings_from_image(image_data, content_type)
-    except AuthenticationError:
-        return jsonify({"error": "Invalid API key. Please set ANTHROPIC_API_KEY in your .env file."}), 500
-    except APIConnectionError:
-        return jsonify({"error": "Could not reach the Anthropic API. Check your internet connection."}), 500
-    except APIStatusError as e:
-        return jsonify({"error": f"Anthropic API error: {e.message}"}), 500
+        result = extract_readings_from_image(image_bytes, mime_type)
+    except PermissionError:
+        return jsonify({"error": "Invalid API key. Please check GEMINI_API_KEY in your .env file."}), 500
+    except RuntimeError:
+        return jsonify({"error": "Free usage limit reached. Try again in a minute."}), 429
+    except ValueError:
+        return jsonify({"error": "Could not read the image. Please try a different photo."}), 400
     except json.JSONDecodeError:
-        return jsonify({"error": "Could not parse readings from the image. Please try a clearer photo."}), 500
+        return jsonify({"error": "Could not parse readings. Please try a clearer photo."}), 500
+    except Exception:
+        return jsonify({"error": "Something went wrong. Please try again."}), 500
 
     readings = result.get("readings", [])
     averages = calculate_averages(readings)

@@ -20,7 +20,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
     header h1 {
       font-size: 1.75rem;
@@ -30,7 +30,22 @@
     header p {
       color: #718096;
       margin-top: 6px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+    }
+
+    /* Privacy badge */
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      padding: 4px 10px;
+      background: #e6fffa;
+      border: 1px solid #81e6d9;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: #2c7a7b;
+      font-weight: 500;
     }
 
     .card {
@@ -39,7 +54,7 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       padding: 28px;
       width: 100%;
-      max-width: 560px;
+      max-width: 520px;
     }
 
     /* Drop zone */
@@ -56,19 +71,9 @@
       border-color: #4299e1;
       background: #ebf8ff;
     }
-    #drop-zone svg {
-      width: 48px;
-      height: 48px;
-      color: #a0aec0;
-      margin-bottom: 12px;
-    }
-    #drop-zone p {
-      color: #718096;
-      font-size: 0.9rem;
-    }
-    #drop-zone strong {
-      color: #4299e1;
-    }
+    #drop-zone svg { width: 44px; height: 44px; color: #a0aec0; margin-bottom: 10px; }
+    #drop-zone p { color: #718096; font-size: 0.9rem; }
+    #drop-zone strong { color: #4299e1; }
     #file-input {
       position: absolute;
       inset: 0;
@@ -84,7 +89,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 12px;
       width: 100%;
       padding: 11px;
       border: 1.5px solid #e2e8f0;
@@ -101,13 +106,13 @@
     /* Preview */
     #preview-wrap {
       display: none;
-      margin-top: 20px;
+      margin-top: 18px;
       text-align: center;
       position: relative;
     }
     #preview-wrap img {
       max-width: 100%;
-      max-height: 280px;
+      max-height: 260px;
       border-radius: 10px;
       object-fit: contain;
     }
@@ -126,7 +131,7 @@
 
     /* Analyse button */
     #analyse-btn {
-      margin-top: 20px;
+      margin-top: 18px;
       width: 100%;
       padding: 14px;
       background: #3182ce;
@@ -157,24 +162,21 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Results */
-    #results {
-      display: none;
-      margin-top: 28px;
-    }
-    .result-header {
-      font-size: 0.75rem;
+    #results { display: none; margin-top: 26px; }
+
+    .section-label {
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: #a0aec0;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     /* Average box */
     .avg-box {
       border-radius: 12px;
-      padding: 22px 24px;
-      text-align: center;
+      padding: 20px 20px 16px;
       margin-bottom: 20px;
     }
     .avg-box.green  { background: #f0fff4; border: 1.5px solid #68d391; }
@@ -182,24 +184,60 @@
     .avg-box.orange { background: #fffaf0; border: 1.5px solid #f6ad55; }
     .avg-box.red    { background: #fff5f5; border: 1.5px solid #fc8181; }
 
+    .avg-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .avg-numbers { flex: 1; }
     .avg-reading {
-      font-size: 3rem;
+      font-size: 3.2rem;
       font-weight: 800;
       line-height: 1;
       color: #2d3748;
       letter-spacing: -1px;
     }
-    .avg-label {
-      font-size: 0.85rem;
+    .avg-unit {
+      font-size: 0.9rem;
       color: #718096;
+      margin-top: 2px;
+    }
+
+    /* Copy button */
+    .copy-btn {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1.5px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, background 0.15s;
       margin-top: 4px;
+    }
+    .green  .copy-btn { color: #276749; }
+    .yellow .copy-btn { color: #744210; }
+    .orange .copy-btn { color: #7b341e; }
+    .red    .copy-btn { color: #742a2a; }
+    .copy-btn:hover { opacity: 0.75; }
+    .copy-btn.copied { opacity: 0.6; cursor: default; }
+
+    .avg-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
     }
     .category-badge {
       display: inline-block;
-      margin-top: 10px;
-      padding: 3px 12px;
+      padding: 3px 10px;
       border-radius: 999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
     }
     .green  .category-badge { background: #c6f6d5; color: #276749; }
@@ -207,37 +245,47 @@
     .orange .category-badge { background: #feebc8; color: #7b341e; }
     .red    .category-badge { background: #fed7d7; color: #742a2a; }
 
+    .reading-count {
+      font-size: 0.78rem;
+      color: #a0aec0;
+    }
+
     /* Readings table */
     .readings-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88rem;
+      font-size: 0.875rem;
     }
     .readings-table th {
       background: #f7fafc;
       color: #718096;
       font-weight: 600;
       text-align: center;
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-bottom: 1px solid #e2e8f0;
     }
     .readings-table td {
-      padding: 8px 12px;
+      padding: 7px 10px;
       text-align: center;
       border-bottom: 1px solid #f0f4f8;
       color: #2d3748;
     }
     .readings-table tr:last-child td { border-bottom: none; }
 
-    /* Notes */
-    .notes-box {
-      background: #f7fafc;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      color: #718096;
-      margin-top: 16px;
+    /* New analysis button */
+    #new-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 11px;
+      background: transparent;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: #4a5568;
+      cursor: pointer;
+      transition: background 0.15s;
     }
+    #new-btn:hover { background: #f7fafc; }
 
     /* Error */
     .error-box {
@@ -247,12 +295,12 @@
       padding: 14px 16px;
       color: #c53030;
       font-size: 0.88rem;
-      margin-top: 20px;
+      margin-top: 18px;
       display: none;
     }
 
     @media (max-width: 400px) {
-      .avg-reading { font-size: 2.4rem; }
+      .avg-reading { font-size: 2.5rem; }
     }
   </style>
 </head>
@@ -260,22 +308,29 @@
 
 <header>
   <h1>BP Average Calculator</h1>
-  <p>Upload a photo of blood pressure readings to get the average instantly</p>
+  <p>Photo of readings &rarr; average in seconds</p>
+  <div class="privacy-badge">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    No data stored &mdash; image discarded immediately after processing
+  </div>
 </header>
 
 <div class="card">
+  <!-- Upload area -->
   <div id="drop-zone">
     <input type="file" id="file-input" accept="image/*">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
     </svg>
-    <p><strong>Click to upload</strong> or drag & drop a photo</p>
-    <p style="margin-top:4px;font-size:0.8rem;">JPG, PNG, WEBP supported</p>
+    <p><strong>Click to upload</strong> or drag &amp; drop a photo</p>
+    <p style="margin-top:4px;font-size:0.8rem;">JPG, PNG, WEBP</p>
   </div>
 
   <button class="camera-btn" id="camera-btn" onclick="document.getElementById('camera-input').click()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
       <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
@@ -284,25 +339,42 @@
   </button>
   <input type="file" id="camera-input" accept="image/*" capture="environment">
 
+  <!-- Image preview -->
   <div id="preview-wrap">
     <img id="preview-img" src="" alt="Preview">
     <button id="change-btn" onclick="resetUpload()">Change</button>
   </div>
 
-  <button id="analyse-btn" onclick="analyseImage()">Analyse readings</button>
+  <button id="analyse-btn" onclick="analyseImage()">Get average</button>
 
   <div class="error-box" id="error-box"></div>
 
+  <!-- Results -->
   <div id="results">
-    <div class="result-header">Average Blood Pressure</div>
+    <div class="section-label">Average Blood Pressure</div>
+
     <div class="avg-box" id="avg-box">
-      <div class="avg-reading" id="avg-reading">—</div>
-      <div class="avg-label" id="avg-label"></div>
-      <span class="category-badge" id="category-badge"></span>
+      <div class="avg-top">
+        <div class="avg-numbers">
+          <div class="avg-reading" id="avg-reading">—</div>
+          <div class="avg-unit">mmHg</div>
+        </div>
+        <button class="copy-btn" id="copy-btn" onclick="copyResult()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          <span id="copy-label">Copy</span>
+        </button>
+      </div>
+      <div class="avg-footer">
+        <span class="category-badge" id="category-badge"></span>
+        <span class="reading-count" id="reading-count"></span>
+      </div>
     </div>
 
-    <div class="result-header" id="readings-header"></div>
-    <table class="readings-table" id="readings-table">
+    <div class="section-label" id="readings-header"></div>
+    <table class="readings-table">
       <thead>
         <tr>
           <th>#</th>
@@ -314,18 +386,18 @@
       <tbody id="readings-body"></tbody>
     </table>
 
-    <div class="notes-box" id="notes-box" style="display:none"></div>
+    <button id="new-btn" onclick="resetUpload()">Analyse another photo</button>
   </div>
 </div>
 
 <script>
   let selectedFile = null;
+  let currentAverage = '';
 
   function setFile(file) {
     if (!file) return;
     selectedFile = file;
-    const url = URL.createObjectURL(file);
-    document.getElementById('preview-img').src = url;
+    document.getElementById('preview-img').src = URL.createObjectURL(file);
     document.getElementById('preview-wrap').style.display = 'block';
     document.getElementById('drop-zone').style.display = 'none';
     document.getElementById('camera-btn').style.display = 'none';
@@ -336,6 +408,7 @@
 
   function resetUpload() {
     selectedFile = null;
+    currentAverage = '';
     document.getElementById('preview-wrap').style.display = 'none';
     document.getElementById('drop-zone').style.display = 'block';
     document.getElementById('camera-btn').style.display = 'flex';
@@ -346,14 +419,9 @@
     document.getElementById('camera-input').value = '';
   }
 
-  document.getElementById('file-input').addEventListener('change', e => {
-    setFile(e.target.files[0]);
-  });
-  document.getElementById('camera-input').addEventListener('change', e => {
-    setFile(e.target.files[0]);
-  });
+  document.getElementById('file-input').addEventListener('change', e => setFile(e.target.files[0]));
+  document.getElementById('camera-input').addEventListener('change', e => setFile(e.target.files[0]));
 
-  // Drag and drop
   const dropZone = document.getElementById('drop-zone');
   dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
@@ -366,7 +434,6 @@
 
   async function analyseImage() {
     if (!selectedFile) return;
-
     const btn = document.getElementById('analyse-btn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Analysing…';
@@ -376,14 +443,9 @@
     try {
       const formData = new FormData();
       formData.append('image', selectedFile);
-
       const resp = await fetch('/analyse', { method: 'POST', body: formData });
       const data = await resp.json();
-
-      if (!resp.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
-
+      if (!resp.ok) throw new Error(data.error || 'Something went wrong');
       displayResults(data);
     } catch (err) {
       const box = document.getElementById('error-box');
@@ -391,33 +453,38 @@
       box.style.display = 'block';
     } finally {
       btn.disabled = false;
-      btn.innerHTML = 'Analyse readings';
+      btn.innerHTML = 'Get average';
     }
   }
 
   function displayResults(data) {
-    const { readings, averages, notes } = data;
+    const { readings, averages } = data;
 
     if (!averages || readings.length === 0) {
       const box = document.getElementById('error-box');
-      box.textContent = 'No blood pressure readings were found in this image. Please try a clearer photo.';
+      box.textContent = 'No blood pressure readings found. Please try a clearer photo.';
       box.style.display = 'block';
       return;
     }
 
-    // Average box
+    currentAverage = `${averages.avg_systolic}/${averages.avg_diastolic} mmHg`;
+
     const avgBox = document.getElementById('avg-box');
     avgBox.className = `avg-box ${averages.category.color}`;
     document.getElementById('avg-reading').textContent =
       `${averages.avg_systolic}/${averages.avg_diastolic}`;
-    document.getElementById('avg-label').textContent =
-      `Average of ${averages.count} reading${averages.count !== 1 ? 's' : ''} · mmHg`;
-    const badge = document.getElementById('category-badge');
-    badge.textContent = averages.category.label;
+    document.getElementById('category-badge').textContent = averages.category.label;
+    document.getElementById('reading-count').textContent =
+      `${averages.count} reading${averages.count !== 1 ? 's' : ''}`;
+
+    // Reset copy button
+    const copyBtn = document.getElementById('copy-btn');
+    copyBtn.classList.remove('copied');
+    document.getElementById('copy-label').textContent = 'Copy';
 
     // Readings table
     document.getElementById('readings-header').textContent =
-      `Individual Readings (${readings.length})`;
+      `Readings (${readings.length})`;
     const tbody = document.getElementById('readings-body');
     tbody.innerHTML = '';
     readings.forEach((r, i) => {
@@ -430,16 +497,38 @@
       tbody.appendChild(tr);
     });
 
-    // Notes
-    const notesBox = document.getElementById('notes-box');
-    if (notes && notes.trim()) {
-      notesBox.textContent = notes;
-      notesBox.style.display = 'block';
-    } else {
-      notesBox.style.display = 'none';
-    }
-
     document.getElementById('results').style.display = 'block';
+  }
+
+  async function copyResult() {
+    if (!currentAverage) return;
+    const btn = document.getElementById('copy-btn');
+    const label = document.getElementById('copy-label');
+    try {
+      await navigator.clipboard.writeText(currentAverage);
+      label.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        label.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    } catch {
+      // Fallback for browsers that block clipboard
+      const ta = document.createElement('textarea');
+      ta.value = currentAverage;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      label.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        label.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
   }
 </script>
 </body>

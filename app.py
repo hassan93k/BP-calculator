@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import os
 import re
 
@@ -11,6 +12,10 @@ from anthropic import AuthenticationError, APIConnectionError, APIStatusError
 load_dotenv()
 
 app = Flask(__name__)
+
+# Suppress Flask request logs — no image data or readings are ever written to logs
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
 
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
@@ -136,13 +141,7 @@ def analyse():
     readings = result.get("readings", [])
     averages = calculate_averages(readings)
 
-    return jsonify(
-        {
-            "readings": readings,
-            "averages": averages,
-            "notes": result.get("notes", ""),
-        }
-    )
+    return jsonify({"readings": readings, "averages": averages})
 
 
 if __name__ == "__main__":

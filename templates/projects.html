@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% set active_page = 'projects' %}
+
+{% block title %}Projects — Hassan{% endblock %}
+
+{% block extra_head %}
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 22px;
+    padding-bottom: 80px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.22s, border-color 0.22s, transform 0.22s;
+  }
+  .project-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(194,105,79,0.35);
+    transform: translateY(-3px);
+  }
+
+  .project-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .project-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .status-badge {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .status-live    { background: #DCFCE7; color: #166534; }
+  .status-wip     { background: #FEF9C3; color: #854D0E; }
+  .status-coming  { background: var(--border-light); color: var(--text-light); }
+
+  .project-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .project-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.68;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .project-tag {
+    padding: 3px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: auto;
+    transition: gap 0.18s;
+  }
+  .project-link:hover { gap: 10px; }
+  .project-link svg { transition: transform 0.18s; }
+  .project-link:hover svg { transform: translateX(2px); }
+
+  /* Placeholder */
+  .project-card.placeholder {
+    border-style: dashed;
+    border-color: var(--border);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .placeholder-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 20px 0;
+    color: var(--text-light);
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="eyebrow">My Work</div>
+    <h1>Projects</h1>
+    <p>Things I've designed and built — practical tools focused on simplicity and real-world impact.</p>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- BP Calculator -->
+    <div class="project-card">
+      <div class="project-card-top">
+        <div class="project-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <span class="status-badge status-live">Live</span>
+      </div>
+      <h2 class="project-name">BP Average Calculator</h2>
+      <p class="project-desc">
+        Upload a photo of your blood pressure log and instantly get your average reading.
+        Powered by Google Gemini vision AI — extracts every reading, calculates the average,
+        and classifies it against clinical guidelines. Zero data retention; your image is
+        discarded immediately after processing.
+      </p>
+      <div class="project-tags">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Flask</span>
+        <span class="project-tag">Google Gemini</span>
+        <span class="project-tag">Vision AI</span>
+        <span class="project-tag">Health Tech</span>
+        <span class="project-tag">Privacy-first</span>
+      </div>
+      <a href="/tools/bp-calculator" class="project-link">
+        Open app
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Placeholder -->
+    <div class="project-card placeholder">
+      <div class="project-card-top">
+        <div class="project-icon" style="opacity:0.5">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <span class="status-badge status-coming">Coming Soon</span>
+      </div>
+      <h2 class="project-name" style="color:var(--text-light)">Next Project</h2>
+      <div class="placeholder-body">More in progress...</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

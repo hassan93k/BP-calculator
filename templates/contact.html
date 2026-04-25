@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% set active_page = 'contact' %}
+
+{% block title %}Contact — Hassan{% endblock %}
+
+{% block extra_head %}
+<style>
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 64px;
+    padding-bottom: 80px;
+    align-items: start;
+  }
+
+  /* Info column */
+  .contact-info h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .contact-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.68;
+    margin-bottom: 28px;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 12px; }
+  .contact-link-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .contact-link-item:hover {
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
+  .contact-link-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .contact-link-text strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .contact-link-text span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .response-note {
+    margin-top: 24px;
+    padding: 14px 16px;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    color: var(--accent-dark);
+    line-height: 1.55;
+  }
+  .response-note strong { font-weight: 600; }
+
+  /* Form card */
+  .form-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+  }
+  .form-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 26px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 860px) {
+    .contact-layout { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="eyebrow">Get In Touch</div>
+    <h1>Contact</h1>
+    <p>Have a project, a question, or just want to say hello? My inbox is open.</p>
+  </div>
+
+  <div class="contact-layout">
+
+    <!-- Info column -->
+    <aside class="contact-info">
+      <h2>Let's connect</h2>
+      <p>I'm open to freelance projects, collaborations, and interesting conversations. I typically respond within 24 hours.</p>
+
+      <div class="contact-links">
+        <a href="https://github.com/hassan93k" target="_blank" rel="noopener" class="contact-link-item">
+          <div class="contact-link-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+            </svg>
+          </div>
+          <div class="contact-link-text">
+            <strong>GitHub</strong>
+            <span>@hassan93k</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="response-note">
+        <strong>Typical response:</strong> within 24 hours. I read every message and reply to each one personally.
+      </div>
+    </aside>
+
+    <!-- Form -->
+    <div class="form-card">
+      <h3>Send a message</h3>
+
+      {% if success %}
+      <div class="success-box">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Message received! I'll get back to you shortly. Thank you for reaching out.
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/contact">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="What's this about?" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6"
+            placeholder="Tell me what you're working on, or how I can help..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Send Message
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -106,7 +106,29 @@ def classify_bp(systolic: int, diastolic: int) -> dict:
 
 
 @app.route("/")
-def index():
+def home():
+    return render_template("home.html")
+
+
+@app.route("/projects")
+def projects():
+    return render_template("projects.html")
+
+
+@app.route("/feedback", methods=["GET", "POST"])
+def feedback():
+    success = request.method == "POST"
+    return render_template("feedback.html", success=success)
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    success = request.method == "POST"
+    return render_template("contact.html", success=success)
+
+
+@app.route("/tools/bp-calculator")
+def bp_calculator():
     return render_template("index.html")
 
 

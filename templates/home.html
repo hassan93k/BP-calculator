@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% set active_page = 'home' %}
+
+{% block title %}Hassan — Developer & Builder{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ── HERO ── */
+  .hero {
+    padding: 88px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -180px; right: -160px;
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(194,105,79,0.07) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 22px; height: 2px;
+    background: var(--accent);
+    border-radius: 99px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 22px;
+    max-width: 680px;
+  }
+  .hero h1 .highlight { color: var(--accent); }
+
+  .hero-bio {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    line-height: 1.72;
+    margin-bottom: 36px;
+  }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ── DIVIDER SECTION ── */
+  .section {
+    padding: 72px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 36px;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .skill-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .skill-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+  .skill-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ── FEATURED PROJECT ── */
+  .featured-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .featured-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(194,105,79,0.3);
+  }
+  .featured-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .featured-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .featured-desc {
+    color: var(--text-muted);
+    line-height: 1.68;
+    max-width: 480px;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tech-tag {
+    padding: 4px 11px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  /* ── CTA BAND ── */
+  .cta-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+  }
+  .cta-section p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 30px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 60px 0 52px; }
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-card-cta { display: none; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow fade-up">Developer &amp; Builder</div>
+    <h1 class="fade-up fade-up-d1">
+      Hi, I'm <span class="highlight">Hassan</span>.<br>
+      I build tools that matter.
+    </h1>
+    <p class="hero-bio fade-up fade-up-d2">
+      I design and build practical software — from AI-powered health tools to clean web apps.
+      I care about simplicity, performance, and making things that genuinely help people.
+    </p>
+    <div class="hero-actions fade-up fade-up-d3">
+      <a href="/projects" class="btn btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        View My Work
+      </a>
+      <a href="/contact" class="btn btn-secondary">Get In Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">What I Work With</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2l9 4.5v9L12 20l-9-4.5v-9L12 2z"/>
+          </svg>
+        </div>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">Flask, APIs, data processing, automation scripts</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+          </svg>
+        </div>
+        <div class="skill-name">Web Development</div>
+        <div class="skill-desc">HTML, CSS, JavaScript, responsive &amp; accessible design</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="skill-name">AI Integration</div>
+        <div class="skill-desc">Google Gemini, Claude API, vision &amp; language models</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 13.5V19a2 2 0 002 2h16a2 2 0 002-2v-5.5"/>
+            <path d="M2 10.5V5a2 2 0 012-2h16a2 2 0 012 2v5.5"/>
+            <line x1="12" y1="3" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div class="skill-name">Clean UI Design</div>
+        <div class="skill-desc">Minimal interfaces, warm aesthetics, UX-first thinking</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROJECT -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Featured Project</div>
+    <div class="featured-card">
+      <div>
+        <span class="featured-pill">Health Tech</span>
+        <h2 class="featured-title">BP Average Calculator</h2>
+        <p class="featured-desc">
+          Photograph your blood pressure log and get instant averages.
+          AI reads the values, calculates your average, and classifies the result
+          against clinical guidelines — without ever storing your data.
+        </p>
+        <div class="tech-tags">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Flask</span>
+          <span class="tech-tag">Google Gemini</span>
+          <span class="tech-tag">Vision AI</span>
+          <span class="tech-tag">Privacy-first</span>
+        </div>
+      </div>
+      <div class="featured-card-cta">
+        <a href="/tools/bp-calculator" class="btn btn-primary">Try It</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Let's work together.</h2>
+    <p>Have a project in mind, or just want to connect? I'd love to hear from you.</p>
+    <a href="/contact" class="btn btn-primary">Send a Message</a>
+  </div>
+</section>
+
+{% endblock %}

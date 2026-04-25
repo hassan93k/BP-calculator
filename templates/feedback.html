@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% set active_page = 'feedback' %}
+
+{% block title %}Feedback — Hassan{% endblock %}
+
+{% block extra_head %}
+<style>
+  .feedback-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 64px;
+    padding-bottom: 80px;
+    align-items: start;
+  }
+
+  /* Sidebar */
+  .feedback-sidebar h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .feedback-sidebar p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.68;
+    margin-bottom: 28px;
+  }
+  .why-list { display: flex; flex-direction: column; gap: 18px; }
+  .why-item { display: flex; gap: 14px; align-items: flex-start; }
+  .why-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .why-text strong { font-size: 0.875rem; font-weight: 600; display: block; margin-bottom: 2px; }
+  .why-text span   { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Form card */
+  .form-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+  }
+  .form-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 26px;
+  }
+
+  /* Star rating */
+  .star-row { margin-bottom: 20px; }
+  .star-row > label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .stars { display: flex; gap: 4px; }
+  .stars .star {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--border);
+    transition: color 0.12s, transform 0.12s;
+    user-select: none;
+    line-height: 1;
+  }
+  .stars .star:hover,
+  .stars .star.active { color: #F59E0B; transform: scale(1.1); }
+
+  .optional-label {
+    font-weight: 400;
+    color: var(--text-light);
+    font-size: 0.82rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 860px) {
+    .feedback-layout { grid-template-columns: 1fr; gap: 0; }
+    .feedback-sidebar { display: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div class="eyebrow">Share Your Thoughts</div>
+    <h1>Feedback</h1>
+    <p>Your honest feedback helps me build better things. I read every message personally.</p>
+  </div>
+
+  <div class="feedback-layout">
+
+    <!-- Sidebar -->
+    <aside class="feedback-sidebar">
+      <h2>Why your opinion matters</h2>
+      <p>I build tools for real people. Your perspective helps me make them more useful, simpler, and more trustworthy.</p>
+      <div class="why-list">
+        <div class="why-item">
+          <div class="why-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="why-text">
+            <strong>Shapes future projects</strong>
+            <span>I build what's actually needed.</span>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          </div>
+          <div class="why-text">
+            <strong>Improves existing tools</strong>
+            <span>Every bug report and suggestion counts.</span>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="why-text">
+            <strong>Read personally</strong>
+            <span>No bots — just me reading your words.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Form -->
+    <div class="form-card">
+      <h3>Leave a note</h3>
+
+      {% if success %}
+      <div class="success-box">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Thank you! Your feedback means a lot. I appreciate you taking the time.
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/feedback">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email <span class="optional-label">(optional)</span></label>
+            <input type="email" id="email" name="email" placeholder="you@example.com">
+          </div>
+        </div>
+
+        <div class="star-row" id="star-row">
+          <label>Overall rating <span class="optional-label">(optional)</span></label>
+          <div class="stars" id="stars">
+            <span class="star" data-val="1">★</span>
+            <span class="star" data-val="2">★</span>
+            <span class="star" data-val="3">★</span>
+            <span class="star" data-val="4">★</span>
+            <span class="star" data-val="5">★</span>
+          </div>
+          <input type="hidden" id="rating" name="rating" value="">
+        </div>
+
+        <div class="form-group">
+          <label for="project">About <span class="optional-label">(optional)</span></label>
+          <select id="project" name="project">
+            <option value="">General feedback</option>
+            <option value="bp-calculator">BP Average Calculator</option>
+            <option value="website">This website</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5"
+            placeholder="What worked well? What could be better? I'm all ears..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-btn">Send Feedback</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const stars = document.querySelectorAll('#stars .star');
+  const ratingInput = document.getElementById('rating');
+  let selected = 0;
+
+  stars.forEach(star => {
+    star.addEventListener('mouseenter', () => {
+      const val = +star.dataset.val;
+      stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= val));
+    });
+    star.addEventListener('click', () => {
+      selected = +star.dataset.val;
+      ratingInput.value = selected;
+      stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= selected));
+    });
+  });
+
+  document.getElementById('stars').addEventListener('mouseleave', () => {
+    stars.forEach(s => s.classList.toggle('active', +s.dataset.val <= selected));
+  });
+</script>
+{% endblock %}
